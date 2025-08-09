@@ -1,0 +1,58 @@
+Phase 1: Flutter 프로젝트 초기 설정
+목표: 개발 환경 구성 및 기본 구조 설정
+
+Flutter 프로젝트 생성 (flutter create exchange_rate_app)
+필요한 dependencies 추가 (pubspec.yaml)
+
+http: API 호출용
+provider 또는 bloc: 상태 관리용
+flutter_dotenv: API 키 보안 관리용
+
+
+API 키를 .env 파일로 분리하여 보안 설정
+기본 폴더 구조 설정 (models, services, screens, widgets)
+
+Phase 2: API 서비스 레이어 구현
+목표: ExchangeRate-API 연동
+
+API 서비스 클래스 작성 (exchange_rate_service.dart)
+HTTP 클라이언트로 환율 데이터 가져오기 함수 구현
+환율 데이터 모델 클래스 생성 (exchange_rate_model.dart)
+에러 처리 및 예외 상황 핸들링
+API 호출 테스트 (단위 테스트 또는 디버그 출력)
+
+Phase 3: 상태 관리 및 비즈니스 로직
+목표: 앱의 핵심 로직 구현
+
+Provider 또는 BLoC 패턴으로 상태 관리 설정
+기준 통화 선택 상태 관리
+입력 금액 상태 관리
+6개 대상 통화 리스트 관리
+환율 계산 로직 구현
+
+Phase 4: UI 화면 구현
+목표: 메인 화면 레이아웃 완성
+
+기준 통화 선택 DropdownButton
+금액 입력 TextField (숫자 키패드)
+6개 통화 결과를 보여주는 ListView 또는 GridView
+로딩 인디케이터 (CircularProgressIndicator)
+기본적인 Material Design 적용
+
+Phase 5: 기능 통합 및 개선
+목표: 모든 기능 연결 및 사용성 향상
+
+기준 통화 변경 시 자동 환율 업데이트
+금액 입력 시 실시간 계산 및 화면 업데이트
+입력값 검증 (숫자만 허용, 빈 값 처리)
+결과 포맷팅 (NumberFormat으로 천 단위 콤마, 소수점 처리)
+에러 상황 UI 처리 (SnackBar, AlertDialog)
+
+Phase 6: 테스트 및 최적화
+목표: 앱 안정성 확보 및 배포 준비
+
+다양한 디바이스 해상도에서 테스트
+Android/iOS 실제 기기에서 테스트
+네트워크 연결 오류 상황 테스트
+앱 아이콘 및 스플래시 스크린 설정
+APK/IPA 빌드 테스트
