@@ -70,6 +70,10 @@ class ExchangeRateProvider with ChangeNotifier {
   String? _errorMessage;
   bool _hasError = false;
   bool _isLoading = false;
+  
+  // 캐시 상태 관리
+  DateTime? _lastSyncTime;
+  bool _isFromCache = false;
 
   ExchangeRate? get exchangeRate => _exchangeRate;
   String get baseCurrency => _baseCurrency;
@@ -83,6 +87,11 @@ class ExchangeRateProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get hasError => _hasError;
   bool get isLoading => _isLoading;
+  
+  // 캐시 관련 getter
+  DateTime? get lastSyncTime => _lastSyncTime;
+  bool get isFromCache => _isFromCache;
+  String get dataSource => _isFromCache ? '캐시' : '실시간';
 
   // 즐겨찾기 관련 getter
   bool isFavorite(String currency) => _favoriteCurrencies.contains(currency);
@@ -171,16 +180,22 @@ class ExchangeRateProvider with ChangeNotifier {
     return _currencies.contains(code.toUpperCase());
   }
 
-  Future<void> fetchExchangeRates() async {
+  Future<void> fetchExchangeRates({bool forceRefresh = false}) async {
     try {
       _clearError();
       _isLoading = true;
       notifyListeners();
 
-      print('Fetching exchange rates for base currency: $_baseCurrency');
-      _exchangeRate = await _service.getExchangeRates(_baseCurrency);
+      print('Fetching exchange rates for base currency: $_baseCurrency (forceRefresh: $forceRefresh)');
+      _exchangeRate = await _service.getExchangeRates(_baseCurrency, forceRefresh: forceRefresh);
+      
+      // 캐시 상태 업데이트
+      _isFromCache = _exchangeRate?.isFromCache ?? false;
+      _lastSyncTime = _exchangeRate?.lastUpdated ?? DateTime.now();
+      
       print('Exchange rates loaded: $_exchangeRate');
-      print('Available rates: ${_exchangeRate?.rates}');
+      print('Data source: ${_isFromCache ? "캐시" : "API"}');
+      print('Last updated: $_lastSyncTime');
 
       _isLoading = false;
       notifyListeners();
@@ -195,7 +210,7 @@ class ExchangeRateProvider with ChangeNotifier {
   Future<void> fetchExchangeRatesWithRetry({int maxRetries = 3}) async {
     for (int i = 0; i < maxRetries; i++) {
       try {
-        await fetchExchangeRates();
+        await fetchExchangeRates(forceRefresh: true);
         return; // 성공하면 종료
       } catch (e) {
         if (i == maxRetries - 1) {
@@ -206,10 +221,26 @@ class ExchangeRateProvider with ChangeNotifier {
       }
     }
   }
+  
+  // 강제 새로고침
+  Future<void> forceRefreshRates() async {
+    await fetchExchangeRates(forceRefresh: true);
+  }
+  
+  // 캐시 정리
+  Future<void> cleanCache() async {
+    await _service.cleanOldCache();
+  }
+  
+  // 마지막 동기화 시간 로드
+  Future<void> loadLastSyncTime() async {
+    _lastSyncTime = await _service.getLastSyncTime();
+    notifyListeners();
+  }
 
   void setBaseCurrency(String currency) {
     _baseCurrency = currency;
-    fetchExchangeRates();
+    fetchExchangeRates(); // 기본적으로 캐시 우선 사용
   }
 
   void setAmount(double amount) {

@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       exchangeProvider.fetchExchangeRates();
       exchangeProvider.loadFavorites();
+      exchangeProvider.loadLastSyncTime();
     });
   }
 
@@ -84,6 +85,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
           return Column(
             children: [
+              // 캐시 상태 인디케이터
+              if (provider.isFromCache && !provider.hasError)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.amber[50],
+                  child: Row(
+                    children: [
+                      Icon(Icons.offline_bolt, size: 16, color: Colors.amber[700]),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '오프라인 모드 - 저장된 데이터 사용 중',
+                          style: TextStyle(fontSize: 12, color: Colors.amber[700]),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => provider.forceRefreshRates(),
+                        child: Text('새로고침', style: TextStyle(fontSize: 12)),
+                      ),
+                    ],
+                  ),
+                ),
               // 에러 메시지 표시
               if (provider.hasError) _buildErrorWidget(provider),
               // 환율 데이터 로딩 상태 표시
