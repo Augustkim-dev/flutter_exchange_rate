@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:geolocator/geolocator.dart';
 import '../providers/onboarding_provider.dart';
+import '../providers/localization_provider.dart';
+import '../l10n/app_localizations.dart';
 import '../services/location_service.dart';
 import '../services/permission_service.dart';
 import '../utils/currency_utils.dart';
@@ -89,6 +91,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           _selectedCurrency = detectedCurrency;
           // Provider에도 저장
           context.read<OnboardingProvider>().setHomeCurrency(detectedCurrency);
+          // 언어 자동 감지
+          context.read<LocalizationProvider>().detectLanguageFromCurrency(detectedCurrency);
         }
         _isDetecting = false;
       });

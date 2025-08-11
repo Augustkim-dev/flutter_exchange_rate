@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'providers/exchange_rate_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/onboarding_provider.dart';
+import 'providers/localization_provider.dart';
 import 'screens/currency_selection_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/language_screen.dart';
@@ -24,13 +27,22 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ExchangeRateProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => OnboardingProvider()),
+        ChangeNotifierProvider(create: (context) => LocalizationProvider()),
       ],
-      child: Consumer2<ThemeProvider, OnboardingProvider>(
-        builder: (context, themeProvider, onboardingProvider, child) {
+      child: Consumer3<ThemeProvider, OnboardingProvider, LocalizationProvider>(
+        builder: (context, themeProvider, onboardingProvider, localizationProvider, child) {
           return MaterialApp(
-            title: '환율 변환기',
             debugShowCheckedModeBanner: false,
             theme: themeProvider.currentTheme,
+            locale: localizationProvider.currentLocale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: LocalizationProvider.supportedLocales,
+            onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
             home: onboardingProvider.isOnboardingCompleted ? HomeScreen() : OnboardingScreen(),
           );
         },
@@ -70,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('환율 변환기'),
+        title: Text(AppLocalizations.of(context)!.appTitle),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
         elevation: 0,
@@ -85,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           return Column(
             children: [
-              // 캐시 상태 인디케이터
-              if (provider.isFromCache && !provider.hasError)
+              // 캐시 상태 인디케이터 - 만료된 캐시를 사용 중일 때만 표시
+              if (provider.shouldShowOfflineMode && !provider.hasError)
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.amber[50],
@@ -96,13 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '오프라인 모드 - 저장된 데이터 사용 중',
+                          AppLocalizations.of(context)!.offlineMode,
                           style: TextStyle(fontSize: 12, color: Colors.amber[700]),
                         ),
                       ),
                       TextButton(
                         onPressed: () => provider.forceRefreshRates(),
-                        child: Text('새로고침', style: TextStyle(fontSize: 12)),
+                        child: Text(AppLocalizations.of(context)!.refresh, style: TextStyle(fontSize: 12)),
                       ),
                     ],
                   ),
@@ -125,13 +137,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '환율 정보를 불러오는 중입니다...',
+                          AppLocalizations.of(context)!.loadingRates,
                           style: TextStyle(color: Colors.orange[700], fontWeight: FontWeight.w500),
                         ),
                       ),
                       ElevatedButton(
                         onPressed: () => provider.fetchExchangeRates(),
-                        child: Text('새로고침'),
+                        child: Text(AppLocalizations.of(context)!.refresh),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange[100],
                           foregroundColor: Colors.orange[700],
@@ -399,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            '입력 중',
+                            AppLocalizations.of(context)!.inputting,
                             style: TextStyle(
                               fontSize: 12,
                               color: Theme.of(context).colorScheme.primary,
@@ -441,7 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Icon(Icons.edit, size: 16, color: Theme.of(context).colorScheme.primary),
                           SizedBox(width: 8),
                           Text(
-                            '${_getCurrencyName(currency)} 금액 입력',
+                            AppLocalizations.of(context)!.inputAmount(currency),
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -507,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String _getCurrencyName(String code) {
-    return CurrencyUtils.getCurrencyName(code);
+    return CurrencyUtils.getCurrencyNameWithContext(context, code);
   }
 
   // Drawer 위젯
@@ -533,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  '환율 변환기',
+                  AppLocalizations.of(context)!.appTitle,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -542,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  '실시간 환율 정보',
+                  AppLocalizations.of(context)!.realtimeExchangeRate,
                   style: TextStyle(
                     fontSize: 14,
                     color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.8),
@@ -555,8 +567,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // 메뉴 항목들
           ListTile(
             leading: Icon(Icons.settings, color: Theme.of(context).colorScheme.primary),
-            title: Text('설정'),
-            subtitle: Text('앱 설정을 관리합니다'),
+            title: Text(AppLocalizations.of(context)!.settings),
+            subtitle: Text(AppLocalizations.of(context)!.manageAppSettings),
             onTap: () {
               Navigator.pop(context); // Drawer 닫기
               Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
@@ -565,8 +577,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           ListTile(
             leading: Icon(Icons.language, color: Theme.of(context).colorScheme.primary),
-            title: Text('언어'),
-            subtitle: Text('언어를 변경합니다'),
+            title: Text(AppLocalizations.of(context)!.language),
+            subtitle: Text(AppLocalizations.of(context)!.changeLanguage),
             onTap: () {
               Navigator.pop(context); // Drawer 닫기
               Navigator.push(context, MaterialPageRoute(builder: (context) => LanguageScreen()));
@@ -575,8 +587,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           ListTile(
             leading: Icon(Icons.feedback, color: Theme.of(context).colorScheme.primary),
-            title: Text('의견보내기'),
-            subtitle: Text('개선 의견을 보냅니다'),
+            title: Text(AppLocalizations.of(context)!.feedback),
+            subtitle: Text(AppLocalizations.of(context)!.sendFeedback),
             onTap: () {
               Navigator.pop(context); // Drawer 닫기
               Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackScreen()));
@@ -587,8 +599,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           ListTile(
             leading: Icon(Icons.info, color: Theme.of(context).colorScheme.primary),
-            title: Text('개발자 정보'),
-            subtitle: Text('앱 정보를 확인합니다'),
+            title: Text(AppLocalizations.of(context)!.developerInfo),
+            subtitle: Text(AppLocalizations.of(context)!.aboutApp),
             onTap: () {
               Navigator.pop(context); // Drawer 닫기
               Navigator.push(context, MaterialPageRoute(builder: (context) => AboutScreen()));
@@ -617,7 +629,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  provider.errorMessage ?? '알 수 없는 오류가 발생했습니다',
+                  provider.errorMessage ?? AppLocalizations.of(context)!.unknownError,
                   style: TextStyle(color: Colors.red[700], fontWeight: FontWeight.w500),
                 ),
               ),
@@ -630,13 +642,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ElevatedButton.icon(
                 onPressed: () => provider.fetchExchangeRates(),
                 icon: Icon(Icons.refresh, size: 16),
-                label: Text('다시 시도'),
+                label: Text(AppLocalizations.of(context)!.retryLoading),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red[100], foregroundColor: Colors.red[700]),
               ),
               ElevatedButton.icon(
                 onPressed: () => provider.fetchExchangeRatesWithRetry(),
                 icon: Icon(Icons.replay, size: 16),
-                label: Text('재시도'),
+                label: Text(AppLocalizations.of(context)!.retry),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red[100], foregroundColor: Colors.red[700]),
               ),
             ],

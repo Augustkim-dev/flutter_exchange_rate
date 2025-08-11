@@ -1,0 +1,150 @@
+{
+  "@@locale": "en",
+  "appTitle": "Exchange Rate Calculator",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "settings": "Settings",
+  "language": "Language",
+  "darkMode": "Dark Mode",
+  "refreshRates": "Refresh Exchange Rates",
+  "lastUpdated": "Last updated: {time}",
+  "@lastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "selectCurrency": "Select Currency",
+  "favorites": "Favorites",
+  "aboutApp": "About",
+  "feedback": "Feedback",
+  "offlineMode": "Offline Mode - Using cached data",
+  "inputAmount": "Enter amount for {currency}",
+  "@inputAmount": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "noInternetConnection": "No internet connection",
+  "cacheDataDeleted": "Cache data deleted",
+  "confirmDeleteCache": "Delete all cached exchange rate data?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "retry": "Retry",
+  "error": "Error",
+  "loading": "Loading...",
+  "welcome": "Welcome",
+  "getStarted": "Get Started",
+  "selectHomeCurrency": "Select Your Home Currency",
+  "selectDefaultCurrencies": "Select Default Currencies",
+  "continueButton": "Continue",
+  "skip": "Skip",
+  "next": "Next",
+  "justNow": "Just now",
+  "minutesAgo": "{count} minutes ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{count} hours ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "realtimeExchangeRate": "Real-time Exchange Rates",
+  "developerInfo": "Developer Info",
+  "sendFeedback": "Send Feedback",
+  "manageAppSettings": "Manage app settings",
+  "changeLanguage": "Change language",
+  "darkModeEnabled": "Dark mode enabled",
+  "lightModeEnabled": "Light mode enabled",
+  "notifications": "Notifications",
+  "receiveRateAlerts": "Receive exchange rate alerts",
+  "autoRefresh": "Auto Refresh",
+  "updateEvery5Minutes": "Update rates every 5 minutes",
+  "favoriteCurrencies": "Favorite Currencies",
+  "currentFavorites": "Currently {count} currencies saved",
+  "@currentFavorites": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "usingCachedData": "Using Cached Data",
+  "refresh": "Refresh",
+  "ratesUpdated": "Exchange rates updated",
+  "updateFailed": "Update failed",
+  "version": "Version",
+  "inputting": "Inputting",
+  "cacheDeletion": "Cache Deletion",
+  "loadingRates": "Loading exchange rates...",
+  "unknownError": "Unknown error occurred",
+  "retryLoading": "Retry",
+  "amount": "Amount",
+  "enterAmount": "Enter amount",
+  "clear": "Clear",
+  "update": "Update",
+  "currencyUSD": "US Dollar",
+  "currencyEUR": "Euro",
+  "currencyJPY": "Japanese Yen",
+  "currencyGBP": "British Pound",
+  "currencyKRW": "Korean Won",
+  "currencyCNY": "Chinese Yuan",
+  "currencyAUD": "Australian Dollar",
+  "currencyCAD": "Canadian Dollar",
+  "currencyCHF": "Swiss Franc",
+  "currencyHKD": "Hong Kong Dollar",
+  "currencyNZD": "New Zealand Dollar",
+  "currencySEK": "Swedish Krona",
+  "currencyNOK": "Norwegian Krone",
+  "currencyDKK": "Danish Krone",
+  "currencySGD": "Singapore Dollar",
+  "currencyTHB": "Thai Baht",
+  "currencyMYR": "Malaysian Ringgit",
+  "currencyIDR": "Indonesian Rupiah",
+  "currencyPHP": "Philippine Peso",
+  "currencyINR": "Indian Rupee",
+  "currencyVND": "Vietnamese Dong",
+  "currencyTRY": "Turkish Lira",
+  "currencyRUB": "Russian Ruble",
+  "currencyBRL": "Brazilian Real",
+  "currencyMXN": "Mexican Peso",
+  "addCurrency": "Add Currency",
+  "alreadyInFavorites": "Already in favorites",
+  "appInfo": "App Info",
+  "versionInfo": "Version 1.0.0",
+  "getLocationCurrency": "Get currency from location",
+  "category": "Category",
+  "general": "General",
+  "other": "Other",
+  "platform": "Platform",
+  "license": "License",
+  "developer": "Developer",
+  "contact": "Contact",
+  "website": "Website",
+  "preview": "Preview",
+  "start": "Start",
+  "manageFavoriteCurrencies": "Manage Favorite Currencies",
+  "allCurrencies": "All Currencies",
+  "searchCurrencies": "Search by code, name, or country...",
+  "maxCurrenciesReached": "Maximum 10 currencies allowed",
+  "currencyAddedToFavorites": "{currency} added to favorites",
+  "@currencyAddedToFavorites": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  }
+}

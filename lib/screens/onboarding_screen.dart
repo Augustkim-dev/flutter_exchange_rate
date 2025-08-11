@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/onboarding_provider.dart';
 import '../providers/exchange_rate_provider.dart';
+import '../providers/localization_provider.dart';
+import '../l10n/app_localizations.dart';
 import 'welcome_screen.dart';
 import 'currency_list_screen.dart';
 import 'theme_selection_screen.dart';
@@ -54,6 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _completeOnboarding() {
     final onboardingProvider = context.read<OnboardingProvider>();
     final exchangeProvider = context.read<ExchangeRateProvider>();
+    final localizationProvider = context.read<LocalizationProvider>();
     
     // 온보딩에서 설정한 기본 통화 목록을 ExchangeRateProvider에 적용
     exchangeProvider.loadDefaultCurrencies(onboardingProvider.defaultCurrencies);
@@ -61,6 +64,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     // 온보딩에서 설정한 홈 통화로 기본 통화 설정
     if (onboardingProvider.homeCurrency.isNotEmpty) {
       exchangeProvider.setBaseCurrency(onboardingProvider.homeCurrency);
+      
+      // 홈 통화에 따라 언어 자동 설정
+      localizationProvider.detectLanguageFromCurrency(onboardingProvider.homeCurrency);
     }
     
     onboardingProvider.setOnboardingCompleted();

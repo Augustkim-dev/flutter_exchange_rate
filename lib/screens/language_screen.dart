@@ -1,81 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/theme_provider.dart';
+import 'package:country_flags/country_flags.dart';
+import '../l10n/app_localizations.dart';
+import '../providers/localization_provider.dart';
 
-class LanguageScreen extends StatefulWidget {
-  @override
-  _LanguageScreenState createState() => _LanguageScreenState();
-}
-
-class _LanguageScreenState extends State<LanguageScreen> {
-  String _selectedLanguage = '한국어';
-
-  final List<Map<String, String>> _languages = [
-    {'name': '한국어', 'code': 'ko', 'native': '한국어'},
-    {'name': 'English', 'code': 'en', 'native': 'English'},
-    {'name': '日本語', 'code': 'ja', 'native': '日本語'},
-    {'name': '中文', 'code': 'zh', 'native': '中文'},
-    {'name': 'Español', 'code': 'es', 'native': 'Español'},
-    {'name': 'Français', 'code': 'fr', 'native': 'Français'},
-    {'name': 'Deutsch', 'code': 'de', 'native': 'Deutsch'},
-    {'name': 'Italiano', 'code': 'it', 'native': 'Italiano'},
-  ];
-
+class LanguageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final localizationProvider = context.watch<LocalizationProvider>();
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text('언어 설정'),
+        title: Text(l10n.language),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
         elevation: 0,
         centerTitle: true,
       ),
       body: ListView.builder(
-        itemCount: _languages.length,
+        itemCount: LocalizationProvider.supportedLocales.length,
         itemBuilder: (context, index) {
-          final language = _languages[index];
-          final isSelected = _selectedLanguage == language['name'];
-
+          final locale = LocalizationProvider.supportedLocales[index];
+          final isSelected = localizationProvider.currentLocale == locale;
+          
           return ListTile(
-            leading: Container(
-              width: 40,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Center(
-                child: Text(
-                  language['code']!.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                ),
+            leading: CountryFlag.fromCountryCode(
+              localizationProvider.getLanguageFlag(locale.languageCode),
+              height: 24,
+              width: 36,
+            ),
+            title: Text(
+              localizationProvider.getLanguageName(locale),
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
-            title: Text(language['name']!),
-            subtitle: Text(language['native']!),
-            trailing: isSelected
-                ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+            trailing: isSelected 
+                ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary) 
                 : null,
+            selected: isSelected,
             onTap: () {
-              setState(() {
-                _selectedLanguage = language['name']!;
-              });
-              // TODO: 언어 변경 로직 구현
+              localizationProvider.setLocale(locale);
+              
+              // 언어 변경 완료 메시지
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('언어가 ${language['name']}로 변경되었습니다'),
+                  content: Text('${localizationProvider.getLanguageName(locale)}'),
                   duration: Duration(seconds: 2),
                 ),
               );
+              
+              // 잠시 후 이전 화면으로 돌아가기
+              Future.delayed(Duration(milliseconds: 500), () {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              });
             },
           );
         },
       ),
     );
   }
-} 
+}

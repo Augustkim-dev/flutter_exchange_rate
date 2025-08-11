@@ -74,6 +74,7 @@ class ExchangeRateProvider with ChangeNotifier {
   // 캐시 상태 관리
   DateTime? _lastSyncTime;
   bool _isFromCache = false;
+  bool _isCacheExpired = false; // 캐시가 만료되었는지 여부
 
   ExchangeRate? get exchangeRate => _exchangeRate;
   String get baseCurrency => _baseCurrency;
@@ -91,6 +92,8 @@ class ExchangeRateProvider with ChangeNotifier {
   // 캐시 관련 getter
   DateTime? get lastSyncTime => _lastSyncTime;
   bool get isFromCache => _isFromCache;
+  bool get isCacheExpired => _isCacheExpired;
+  bool get shouldShowOfflineMode => _isFromCache && _isCacheExpired; // 캐시 사용 중이면서 만료된 경우만 표시
   String get dataSource => _isFromCache ? '캐시' : '실시간';
 
   // 즐겨찾기 관련 getter
@@ -193,9 +196,19 @@ class ExchangeRateProvider with ChangeNotifier {
       _isFromCache = _exchangeRate?.isFromCache ?? false;
       _lastSyncTime = _exchangeRate?.lastUpdated ?? DateTime.now();
       
+      // 캐시 만료 여부 확인 (24시간 기준)
+      if (_isFromCache && _lastSyncTime != null) {
+        final now = DateTime.now();
+        final difference = now.difference(_lastSyncTime!);
+        _isCacheExpired = difference.inHours >= 24;
+      } else {
+        _isCacheExpired = false;
+      }
+      
       print('Exchange rates loaded: $_exchangeRate');
       print('Data source: ${_isFromCache ? "캐시" : "API"}');
       print('Last updated: $_lastSyncTime');
+      print('Cache expired: $_isCacheExpired');
 
       _isLoading = false;
       notifyListeners();

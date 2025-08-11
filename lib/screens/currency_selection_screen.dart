@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/exchange_rate_provider.dart';
 import '../utils/currency_utils.dart';
 import 'package:country_flags/country_flags.dart';
+import '../l10n/app_localizations.dart';
 
 class CurrencySelectionScreen extends StatefulWidget {
   final String currentCurrency;
@@ -34,7 +35,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
   }
 
   void _initializeCurrencies() {
-    _allCurrencies = CurrencyUtils.getAllCurrencies();
+    _allCurrencies = CurrencyUtils.getAllCurrenciesWithContext(context);
   }
 
   void _filterCurrencies(String query) {
@@ -103,7 +104,9 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isFromSettings ? '즐겨찾기 통화 관리' : '통화 선택'),
+        title: Text(widget.isFromSettings 
+            ? AppLocalizations.of(context)!.manageFavoriteCurrencies 
+            : AppLocalizations.of(context)!.selectCurrency),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
         elevation: 0,
@@ -116,9 +119,9 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                Expanded(child: _buildFilterButton('전체 통화', !_showFavoritesOnly, _toggleFavoritesFilter)),
+                Expanded(child: _buildFilterButton(AppLocalizations.of(context)!.allCurrencies, !_showFavoritesOnly, _toggleFavoritesFilter)),
                 SizedBox(width: 12),
-                Expanded(child: _buildFilterButton('즐겨찾기', _showFavoritesOnly, _toggleFavoritesFilter)),
+                Expanded(child: _buildFilterButton(AppLocalizations.of(context)!.favorites, _showFavoritesOnly, _toggleFavoritesFilter)),
               ],
             ),
           ),
@@ -128,7 +131,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: '통화 코드, 이름, 국가로 검색...',
+                hintText: AppLocalizations.of(context)!.searchCurrencies,
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
@@ -214,7 +217,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                 if (!isFavorite && provider.favoriteCurrencies.length >= 10) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('10개까지만 선택할 수 있습니다'),
+                                      content: Text(AppLocalizations.of(context)!.maxCurrenciesReached),
                                       duration: Duration(seconds: 2),
                                       backgroundColor: Theme.of(context).colorScheme.error,
                                     ),
@@ -265,14 +268,14 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                           provider.addCurrency(currency['code']!);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${currency['code']}가 즐겨찾기에 추가되었습니다'),
+                              content: Text(AppLocalizations.of(context)!.currencyAddedToFavorites(currency['code']!)),
                               duration: Duration(seconds: 2),
                             ),
                           );
                         } else {
                           ScaffoldMessenger.of(
                             context,
-                          ).showSnackBar(SnackBar(content: Text('이미 즐겨찾기에 포함되어 있습니다'), duration: Duration(seconds: 2)));
+                          ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.alreadyInFavorites), duration: Duration(seconds: 2)));
                         }
                       } else {
                         // 메인 화면에서 접근한 경우: 기존 동작
