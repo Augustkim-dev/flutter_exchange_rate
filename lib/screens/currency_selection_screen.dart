@@ -30,12 +30,22 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeCurrencies();
+    // initState에서는 context를 사용할 수 없으므로 didChangeDependencies에서 초기화
+    // 대신 기본값을 사용
+    _allCurrencies = CurrencyUtils.getAllCurrencies();
     _filterCurrencies('');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // context가 사용 가능한 시점에 다국어 지원 데이터로 업데이트
+    _initializeCurrencies();
   }
 
   void _initializeCurrencies() {
     _allCurrencies = CurrencyUtils.getAllCurrenciesWithContext(context);
+    _filterCurrencies(_searchController.text);
   }
 
   void _filterCurrencies(String query) {

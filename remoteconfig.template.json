@@ -1,0 +1,72 @@
+{
+  "conditions": [
+    {
+      "name": "android_users",
+      "expression": "device.os == 'android'",
+      "tagColor": "BLUE"
+    },
+    {
+      "name": "ios_users", 
+      "expression": "device.os == 'ios'",
+      "tagColor": "GREEN"
+    }
+  ],
+  "parameters": {
+    "minimum_version": {
+      "defaultValue": {
+        "value": "1.0.0"
+      },
+      "description": "Minimum app version required to use the app. Users below this version will be forced to update."
+    },
+    "latest_version": {
+      "defaultValue": {
+        "value": "1.0.0"
+      },
+      "description": "Latest available app version. Used to show optional update prompts."
+    },
+    "force_update": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "description": "When true, forces users to update the app regardless of version comparison."
+    },
+    "update_message": {
+      "defaultValue": {
+        "value": "새로운 버전이 출시되었습니다. 업데이트하여 최신 기능을 사용해보세요!"
+      },
+      "conditionalValues": {
+        "android_users": {
+          "value": "환율 변환기 앱의 새 버전이 Google Play 스토어에 출시되었습니다. 지금 업데이트하세요!"
+        },
+        "ios_users": {
+          "value": "환율 변환기 앱의 새 버전이 App Store에 출시되었습니다. 지금 업데이트하세요!"
+        }
+      },
+      "description": "Message to display to users when an update is available."
+    },
+    "update_url_android": {
+      "defaultValue": {
+        "value": "https://play.google.com/store/apps/details?id=com.accu.exchange_rate"
+      },
+      "description": "URL to redirect Android users for app updates (Google Play Store)."
+    },
+    "update_url_ios": {
+      "defaultValue": {
+        "value": "https://apps.apple.com/app/id123456789"
+      },
+      "description": "URL to redirect iOS users for app updates (App Store). Replace with actual App Store ID."
+    },
+    "maintenance_mode": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "description": "When true, the app will show maintenance screen and prevent normal usage."
+    },
+    "maintenance_message": {
+      "defaultValue": {
+        "value": "서버 점검 중입니다. 잠시 후 다시 시도해주세요."
+      },
+      "description": "Message to display to users during maintenance mode."
+    }
+  }
+}

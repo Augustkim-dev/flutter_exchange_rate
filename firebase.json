@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "exchange-rate-app-f0e74",
+          "appId": "1:908015410903:android:119a158f7908de3a4b5a92",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "exchange-rate-app-f0e74",
+          "configurations": {
+            "android": "1:908015410903:android:119a158f7908de3a4b5a92",
+            "ios": "1:908015410903:ios:e169a301bbb2ca114b5a92"
+          }
+        }
+      }
+    }
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  }
+}

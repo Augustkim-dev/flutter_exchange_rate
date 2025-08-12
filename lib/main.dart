@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'providers/exchange_rate_provider.dart';
@@ -14,8 +16,21 @@ import 'screens/about_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'utils/currency_utils.dart';
 import 'package:country_flags/country_flags.dart';
+import 'services/app_update_service.dart';
+import 'widgets/update_dialog.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  // Initialize App Update Service
+  final appUpdateService = AppUpdateService();
+  await appUpdateService.initialize();
+  
   runApp(MyApp());
 }
 
@@ -57,10 +72,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final AppUpdateService _updateService = AppUpdateService();
+  
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final exchangeProvider = context.read<ExchangeRateProvider>();
       final onboardingProvider = context.read<OnboardingProvider>();
 
@@ -75,7 +92,22 @@ class _HomeScreenState extends State<HomeScreen> {
       exchangeProvider.fetchExchangeRates();
       exchangeProvider.loadFavorites();
       exchangeProvider.loadLastSyncTime();
+      
+      // 앱 업데이트 체크
+      await _checkForAppUpdate();
     });
+  }
+  
+  Future<void> _checkForAppUpdate() async {
+    try {
+      final updateType = await _updateService.checkForUpdate();
+      
+      if (_updateService.shouldShowUpdateDialog() && mounted) {
+        await showUpdateDialog(context, _updateService);
+      }
+    } catch (e) {
+      print('업데이트 체크 실패: $e');
+    }
   }
 
   @override

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "908015410903",
+    "project_id": "exchange-rate-app-f0e74",
+    "storage_bucket": "exchange-rate-app-f0e74.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908015410903:android:119a158f7908de3a4b5a92",
+        "android_client_info": {
+          "package_name": "com.accu.exchange_rate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmAfWBjVFGaMXs-Yq0bj_A9hxgSBugVXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
