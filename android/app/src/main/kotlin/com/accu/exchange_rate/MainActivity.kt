@@ -3,18 +3,22 @@ package com.accu.exchange_rate
 import android.os.Build
 import android.os.Bundle
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Enable edge-to-edge display for Android 15 (API 35) and above
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        
         super.onCreate(savedInstanceState)
         
-        // Handle edge-to-edge for SDK 35 and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
+        // Enable edge-to-edge display using WindowCompat (recommended for Android 15+)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        // Configure system bars appearance for Android 15+ compatibility
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController?.let {
+            // Set system bars appearance based on theme
+            it.isAppearanceLightStatusBars = true  // or false for dark content
+            it.isAppearanceLightNavigationBars = true  // or false for dark content
         }
     }
 }

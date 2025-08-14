@@ -16,7 +16,6 @@
         <item name="android:windowBackground">?android:colorBackground</item>
         <!-- Enable edge-to-edge on Android 15+ -->
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- Removed deprecated statusBarColor and navigationBarColor for Android 15 compatibility -->
     </style>
 </resources>
