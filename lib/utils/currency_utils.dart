@@ -75,6 +75,11 @@ class CurrencyUtils {
     {'code': 'GEL', 'country': 'GE'},
     {'code': 'AMD', 'country': 'AM'},
     {'code': 'AZN', 'country': 'AZ'},
+    {'code': 'TWD', 'country': 'TW'},
+    {'code': 'MMK', 'country': 'MM'},
+    {'code': 'KHR', 'country': 'KH'},
+    {'code': 'LAK', 'country': 'LA'},
+    {'code': 'BND', 'country': 'BN'},
   ];
 
   // getAllCurrencies 메서드 추가 (CurrencySelectionScreen에서 사용)
@@ -88,7 +93,7 @@ class CurrencyUtils {
     final currencyCodes = [
       'USD', 'EUR', 'JPY', 'GBP', 'KRW', 'CNY', 'AUD', 'CAD', 'CHF', 'HKD',
       'NZD', 'SEK', 'NOK', 'DKK', 'SGD', 'THB', 'MYR', 'IDR', 'PHP', 'INR',
-      'BRL', 'MXN', 'VND', 'TRY', 'RUB'
+      'BRL', 'MXN', 'VND', 'TRY', 'RUB', 'TWD', 'MMK', 'KHR', 'LAK', 'BND'
     ];
 
     final countryNames = {
@@ -116,7 +121,12 @@ class CurrencyUtils {
       'MXN': '멕시코',
       'VND': '베트남',
       'TRY': '터키',
-      'RUB': '러시아'
+      'RUB': '러시아',
+      'TWD': '대만',
+      'MMK': '미얀마',
+      'KHR': '캄보디아',
+      'LAK': '라오스',
+      'BND': '브루나이'
     };
 
     return currencyCodes.map((code) {
@@ -193,6 +203,16 @@ class CurrencyUtils {
         return l10n.currencyBRL;
       case 'MXN':
         return l10n.currencyMXN;
+      case 'TWD':
+        return getCurrencyName(code); // fallback to default name
+      case 'MMK':
+        return getCurrencyName(code); // fallback to default name
+      case 'KHR':
+        return getCurrencyName(code); // fallback to default name
+      case 'LAK':
+        return getCurrencyName(code); // fallback to default name
+      case 'BND':
+        return getCurrencyName(code); // fallback to default name
       default:
         return getCurrencyName(code); // 다른 통화는 기본 이름 사용
     }
@@ -249,6 +269,11 @@ class CurrencyUtils {
       'TND': '튀니지 디나르',
       'AED': '아랍에미리트 디르함',
       'SAR': '사우디아라비아 리얄',
+      'TWD': '대만 달러',
+      'MMK': '미얀마 짜트',
+      'KHR': '캄보디아 리엘',
+      'LAK': '라오스 킵',
+      'BND': '브루나이 달러',
     };
     
     return currencyNames[code] ?? code;
@@ -320,6 +345,11 @@ class CurrencyUtils {
       'MYR': 'RM',
       'IDR': 'Rp',
       'TRY': '₺',
+      'TWD': 'NT\$',
+      'MMK': 'K',
+      'KHR': '៛',
+      'LAK': '₭',
+      'BND': 'B\$',
     };
     
     // 숫자 포맷팅

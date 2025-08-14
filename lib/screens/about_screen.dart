@@ -1,8 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'dart:io' show Platform;
 import '../providers/theme_provider.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
+  @override
+  _AboutScreenState createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  String appVersion = '로딩 중...';
+  String buildNumber = '로딩 중...';
+  String flutterVersion = '';
+  String dartVersion = '';
+  String platformInfo = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppInfo();
+  }
+
+  Future<void> _loadAppInfo() async {
+    try {
+      // 앱 버전 정보 가져오기
+      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      
+      // Flutter 및 Dart 버전 정보
+      const flutterVer = String.fromEnvironment('flutter.version', defaultValue: '3.32.8');
+      const dartVer = String.fromEnvironment('dart.version', defaultValue: '3.8.1');
+      
+      // 플랫폼 정보 동적으로 구성
+      List<String> platforms = [];
+      if (!kIsWeb) {
+        if (Platform.isAndroid) platforms.add('Android');
+        if (Platform.isIOS) platforms.add('iOS');
+        if (Platform.isWindows) platforms.add('Windows');
+        if (Platform.isMacOS) platforms.add('macOS');
+        if (Platform.isLinux) platforms.add('Linux');
+      } else {
+        platforms.add('Web');
+      }
+      
+      setState(() {
+        appVersion = packageInfo.version;
+        buildNumber = packageInfo.buildNumber;
+        flutterVersion = flutterVer.isEmpty ? '3.32.8' : flutterVer;
+        dartVersion = dartVer.isEmpty ? '3.8.1' : dartVer;
+        platformInfo = platforms.isEmpty ? 'Android, iOS' : platforms.join(', ');
+      });
+    } catch (e) {
+      print('Error loading app info: $e');
+      setState(() {
+        appVersion = '1.0.4';
+        buildNumber = '5';
+        flutterVersion = '3.32.8';
+        dartVersion = '3.8.1';
+        platformInfo = 'Android, iOS';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +99,7 @@ class AboutScreen extends StatelessWidget {
             ),
             SizedBox(height: 8),
 
-            Text('버전 1.0.0', style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            Text('버전 $appVersion', style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurfaceVariant)),
             SizedBox(height: 32),
 
             // 개발자 정보
@@ -74,10 +134,10 @@ class AboutScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
 
-                  _buildInfoRow(context, '빌드 번호', '1.0.0'),
-                  _buildInfoRow(context, 'Flutter 버전', '3.16.0'),
-                  _buildInfoRow(context, 'Dart 버전', '3.2.0'),
-                  _buildInfoRow(context, '플랫폼', 'Android, iOS, Web'),
+                  _buildInfoRow(context, '빌드 번호', buildNumber),
+                  _buildInfoRow(context, 'Flutter 버전', flutterVersion),
+                  _buildInfoRow(context, 'Dart 버전', dartVersion),
+                  _buildInfoRow(context, '플랫폼', platformInfo),
                 ],
               ),
             ),

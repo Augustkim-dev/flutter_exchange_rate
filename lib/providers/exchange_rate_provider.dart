@@ -435,6 +435,16 @@ class ExchangeRateProvider with ChangeNotifier {
     }
   }
 
+  // 통화 순서 변경
+  void reorderCurrencies(int oldIndex, int newIndex) {
+    if (oldIndex < _currencies.length && newIndex <= _currencies.length) {
+      final item = _currencies.removeAt(oldIndex);
+      _currencies.insert(newIndex, item);
+      _saveCurrencies();
+      notifyListeners();
+    }
+  }
+
   double calculateReverseConversion(String targetCurrency, double targetAmount) {
     if (_exchangeRate == null) {
       print('calculateReverseConversion: _exchangeRate is null for $targetCurrency');

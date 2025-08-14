@@ -348,14 +348,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildResultsList(ExchangeRateProvider provider) {
     final currencies = provider.currencies;
 
-    return ListView.builder(
+    return ReorderableListView.builder(
+      onReorder: (int oldIndex, int newIndex) {
+        setState(() {
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          provider.reorderCurrencies(oldIndex, newIndex);
+        });
+      },
       itemCount: currencies.length,
       itemBuilder: (context, index) {
         final currency = currencies[index];
         final isSelected = provider.selectedCurrency == currency;
         final convertedAmount = provider.calculateConversion(currency);
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isSmallScreen = screenWidth < 360;
 
         return Container(
+          key: ValueKey(currency),
           margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
           decoration: BoxDecoration(
             color: isSelected
@@ -380,96 +391,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Column(
             children: [
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                leading: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CurrencySelectionScreen(
-                          currentCurrency: currency,
-                          onCurrencySelected: (selectedCurrency) {
-                            // 선택된 통화로 현재 통화를 교체
-                            _replaceCurrency(currency, selectedCurrency, provider);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // 국기 표시
-                      CountryFlag.fromCountryCode(
-                        CurrencyUtils.getCountryCodeFromCurrency(currency),
-                        height: 20,
-                        width: 30,
-                      ),
-                      SizedBox(width: 8),
-                      // 통화 코드
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          currency,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                title: Text(
-                  _getCurrencyName(currency),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                trailing: isSelected
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.inputting,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Icon(Icons.keyboard_arrow_up, color: Theme.of(context).colorScheme.primary),
-                        ],
-                      )
-                    : Text(
-                        CurrencyUtils.formatCurrencyAmount(convertedAmount, currency),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                onTap: () {
-                  if (isSelected) {
-                    provider.setSelectedCurrency(null);
-                  } else {
-                    provider.setSelectedCurrency(currency);
-                  }
-                },
-              ),
+              isSmallScreen
+                  ? _buildTwoLineLayout(context, currency, isSelected, convertedAmount, provider, index)
+                  : _buildSingleLineLayout(context, currency, isSelected, convertedAmount, provider, index),
               if (isSelected)
                 Container(
                   padding: EdgeInsets.all(16),
@@ -552,6 +476,246 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _getCurrencyName(String code) {
     return CurrencyUtils.getCurrencyNameWithContext(context, code);
+  }
+
+  // 작은 화면용 2줄 레이아웃
+  Widget _buildTwoLineLayout(BuildContext context, String currency, bool isSelected, 
+      double convertedAmount, ExchangeRateProvider provider, int index) {
+    return InkWell(
+      onTap: () {
+        if (isSelected) {
+          provider.setSelectedCurrency(null);
+        } else {
+          provider.setSelectedCurrency(currency);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Column(
+          children: [
+            // 첫 번째 줄: 국기, 통화코드, 국가명
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CurrencySelectionScreen(
+                          currentCurrency: currency,
+                          onCurrencySelected: (selectedCurrency) {
+                            _replaceCurrency(currency, selectedCurrency, provider);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      CountryFlag.fromCountryCode(
+                        CurrencyUtils.getCountryCodeFromCurrency(currency),
+                        height: 18,
+                        width: 28,
+                      ),
+                      SizedBox(width: 6),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          currency,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _getCurrencyName(currency),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected 
+                          ? Theme.of(context).colorScheme.primary 
+                          : Theme.of(context).colorScheme.onSurface,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                ReorderableDragStartListener(
+                  index: index,
+                  child: Container(
+                    padding: EdgeInsets.all(6),
+                    child: Icon(
+                      Icons.drag_handle,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 6),
+            // 두 번째 줄: 금액
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 34),
+                    child: isSelected
+                        ? Row(
+                            children: [
+                              Icon(Icons.edit, size: 14, color: Theme.of(context).colorScheme.primary),
+                              SizedBox(width: 4),
+                              Text(
+                                AppLocalizations.of(context)!.inputting,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            CurrencyUtils.formatCurrencyAmount(convertedAmount, currency),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 일반 화면용 1줄 레이아웃
+  Widget _buildSingleLineLayout(BuildContext context, String currency, bool isSelected, 
+      double convertedAmount, ExchangeRateProvider provider, int index) {
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CurrencySelectionScreen(
+                currentCurrency: currency,
+                onCurrencySelected: (selectedCurrency) {
+                  _replaceCurrency(currency, selectedCurrency, provider);
+                },
+              ),
+            ),
+          );
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CountryFlag.fromCountryCode(
+              CurrencyUtils.getCountryCodeFromCurrency(currency),
+              height: 20,
+              width: 30,
+            ),
+            SizedBox(width: 8),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                currency,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      title: Text(
+        _getCurrencyName(currency),
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: isSelected 
+              ? Theme.of(context).colorScheme.primary 
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isSelected)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.inputting,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 4),
+                Icon(Icons.keyboard_arrow_up, color: Theme.of(context).colorScheme.primary),
+              ],
+            )
+          else
+            Text(
+              CurrencyUtils.formatCurrencyAmount(convertedAmount, currency),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          SizedBox(width: 8),
+          ReorderableDragStartListener(
+            index: index,
+            child: Container(
+              padding: EdgeInsets.all(8),
+              child: Icon(
+                Icons.drag_handle,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        if (isSelected) {
+          provider.setSelectedCurrency(null);
+        } else {
+          provider.setSelectedCurrency(currency);
+        }
+      },
+    );
   }
 
   // Drawer 위젯
