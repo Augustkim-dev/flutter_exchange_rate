@@ -18,9 +18,11 @@ class LanguageScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: LocalizationProvider.supportedLocales.length,
-        itemBuilder: (context, index) {
+      body: SafeArea(
+        bottom: true,
+        child: ListView.builder(
+          itemCount: LocalizationProvider.supportedLocales.length,
+          itemBuilder: (context, index) {
           final locale = LocalizationProvider.supportedLocales[index];
           final isSelected = localizationProvider.currentLocale == locale;
           
@@ -60,6 +62,7 @@ class LanguageScreen extends StatelessWidget {
             },
           );
         },
+        ),
       ),
     );
   }

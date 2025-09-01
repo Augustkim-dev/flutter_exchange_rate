@@ -110,8 +110,10 @@ class _CurrencyPickerScreenState extends State<CurrencyPickerScreen> {
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
         elevation: 0,
       ),
-      body: Column(
-        children: [
+      body: SafeArea(
+        bottom: true,
+        child: Column(
+          children: [
           // 검색 바
           Container(
             padding: EdgeInsets.all(16),
@@ -187,6 +189,7 @@ class _CurrencyPickerScreenState extends State<CurrencyPickerScreen> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

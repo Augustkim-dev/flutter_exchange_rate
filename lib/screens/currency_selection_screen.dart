@@ -122,8 +122,10 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Column(
-        children: [
+      body: SafeArea(
+        bottom: true,
+        child: Column(
+          children: [
           // 필터 버튼
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -299,6 +301,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

@@ -73,9 +73,11 @@ class _AboutScreenState extends State<AboutScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
+      body: SafeArea(
+        bottom: true,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
           children: [
             // 앱 아이콘 및 정보
             Container(
@@ -203,6 +205,7 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
           ],
+          ),
         ),
       ),
     );
