@@ -2,9 +2,9 @@
 
 ## 프로젝트 개요
 **프로젝트명**: 환율 변환기 (Exchange Rate Converter)  
-**현재 버전**: 1.0.5 (Build 6)  
-**최종 업데이트**: 2025-08-14  
-**상태**: 🟢 **Production (Google Play 출시 완료)**  
+**현재 버전**: 1.0.6 (Build 7)  
+**최종 업데이트**: 2025-09-01  
+**상태**: 🟢 **Production (Google Play 출시 준비)**  
 **스토어 링크**: [Google Play Store](https://play.google.com/store/apps/details?id=com.accu.exchange_rate)
 
 ## 기술 스택
@@ -57,9 +57,17 @@
 - 포트폴리오 관리 기능
 - 여행 경비 계산기
 
-## 최근 작업 내역 (v1.0.5)
+## 최근 작업 내역 (v1.0.6)
 
 ### 완료된 작업
+- ✅ 안드로이드 네비게이션 바 오버랩 문제 해결
+- ✅ 모든 화면(11개)에 SafeArea 적용
+- ✅ 숫자 키패드 하단 버튼(0, ., ⌫) 터치 영역 보장
+- ✅ 온보딩 화면부터 적용되는 일관된 SafeArea 처리
+- ✅ 제스처 네비게이션 완벽 지원
+- ✅ 다양한 화면 비율 호환성 향상
+
+### 이전 버전 (v1.0.5) 작업
 - ✅ Android 15 호환성 문제 해결
 - ✅ Edge-to-edge 디스플레이 지원
 - ✅ 반응형 레이아웃 구현 (2줄 표시)
@@ -84,8 +92,8 @@ build/app/outputs/bundle/release/app-release.aab
 ```
 
 ### 버전 관리
-- 현재: v1.0.5+6
-- 이전: v1.0.4+5
+- 현재: v1.0.6+7
+- 이전: v1.0.5+6
 - pubspec.yaml에서 버전 관리
 
 ### 서명 정보
@@ -135,10 +143,11 @@ docs/
 ## 배포 현황
 
 ### Google Play Store
-- **상태**: ✅ **출시 완료** (2025-08-14)
+- **상태**: ✅ **출시 완료** (1.0.5) / 🔄 **업데이트 준비** (1.0.6)
 - **패키지명**: com.accu.exchange_rate
 - **스토어 URL**: https://play.google.com/store/apps/details?id=com.accu.exchange_rate
-- **버전**: 1.0.5 (Build 6)
+- **현재 버전**: 1.0.5 (Build 6)
+- **업데이트 버전**: 1.0.6 (Build 7)
 - **심사 기간**: 약 1-2시간
 
 ### App Store (iOS)
@@ -174,8 +183,9 @@ docs/
 - **2025-08-12**: v1.0.3 첫 빌드
 - **2025-08-13**: v1.0.4 Google Play 첫 제출
 - **2025-08-14**: v1.0.5 업데이트 및 출시 완료 ✅
+- **2025-09-01**: v1.0.6 SafeArea 적용 및 UI 안정성 개선
 
 ---
 
-*Last Updated: 2025-08-14*  
-*Status: 🟢 Live on Google Play Store*
+*Last Updated: 2025-09-01*  
+*Status: 🟢 Live on Google Play Store (v1.0.5) / 🔄 Update Ready (v1.0.6)*

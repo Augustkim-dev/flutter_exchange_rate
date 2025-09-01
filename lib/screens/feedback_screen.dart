@@ -40,9 +40,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
+      body: SafeArea(
+        bottom: true,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,6 +154,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),

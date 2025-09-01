@@ -75,25 +75,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // 페이지 뷰
-          PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
-            },
-            children: _pages,
-          ),
-          
-          // 하단 네비게이션
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
+      body: SafeArea(
+        bottom: true,
+        child: Stack(
+          children: [
+            // 페이지 뷰
+            PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
+              children: _pages,
+            ),
+            
+            // 하단 네비게이션
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
               padding: EdgeInsets.all(24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -159,7 +161,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

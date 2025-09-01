@@ -121,13 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       drawer: _buildDrawer(context),
-      body: Consumer<ExchangeRateProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        bottom: true,
+        child: Consumer<ExchangeRateProvider>(
+          builder: (context, provider, child) {
+            if (provider.isLoading) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-          return Column(
+            return Column(
             children: [
               // 캐시 상태 인디케이터 - 만료된 캐시를 사용 중일 때만 표시
               if (provider.shouldShowOfflineMode && !provider.hasError)
@@ -191,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           );
         },
+        ),
       ),
     );
   }

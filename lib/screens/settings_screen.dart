@@ -16,8 +16,10 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: ListView(
-        children: [
+      body: SafeArea(
+        bottom: true,
+        child: ListView(
+          children: [
           Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
               return ListTile(
@@ -243,6 +245,7 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
         ],
+        ),
       ),
     );
   }
