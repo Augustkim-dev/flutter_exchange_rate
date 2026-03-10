@@ -1,5 +1,66 @@
 # 📝 Release Notes
 
+## Version 1.0.7 (Build 8) - 2026-03-09
+
+### 🎯 주요 업데이트
+
+#### **메인 화면 통화 목록 레이아웃 개선 및 통화 표시 형식 변경**
+
+이번 업데이트는 특정 해상도에서 발생하던 레이아웃 문제를 해결하고, 통화 금액 표시를 기호에서 코드 방식으로 변경하는 UI 개선 패치입니다.
+
+### 🐛 버그 수정
+
+#### 1. **통화명 표시 레이아웃 깨짐 문제 해결**
+- **문제 상황**:
+  - 특정 해상도의 폰에서 통화명("한국 원", "베트남 동" 등)이 매우 좁은 세로줄로 표시
+  - `ListTile` 위젯이 `leading`과 `trailing`에 먼저 공간을 할당하여 `title`(통화명)의 공간이 부족
+  - 금액 텍스트가 긴 경우(예: "₫121,345") 통화명 영역이 극도로 좁아짐
+
+- **해결 방법**:
+  - `_buildSingleLineLayout`에서 `ListTile`을 커스텀 `Row` + `Expanded` 레이아웃으로 교체
+  - 통화명을 `Expanded`로 감싸 유연한 공간 확보
+  - `maxLines: 1` + `TextOverflow.ellipsis`로 안전한 말줄임표 처리
+  - 금액 텍스트에 `ConstrainedBox(maxWidth: 화면폭 * 0.35)` 적용하여 과도한 공간 차지 방지
+
+### ✨ 기능 개선
+
+#### 2. **통화 금액 표시 형식 변경 (기호 → 통화코드)**
+- **변경 전**: `₫121,345`, `₩6,922`, `$4.67`, `¥734`
+- **변경 후**: `121,345 VND`, `6,922 KRW`, `4.67 USD`, `734 JPY`
+- 모든 통화에 대해 통일된 `"금액 통화코드"` 형식 적용
+- 50개+ 통화 기호 매핑 딕셔너리 및 기호 위치 분기 로직 제거
+- 직관적이고 일관성 있는 통화 표시
+
+### 🔧 기술적 상세
+
+#### 수정된 파일
+- `lib/main.dart` — `_buildSingleLineLayout` 메서드 레이아웃 구조 변경
+- `lib/utils/currency_utils.dart` — `formatCurrencyAmount` 메서드 간소화
+
+#### 레이아웃 변경 (main.dart)
+```dart
+// Before: ListTile (공간 분배 제어 불가)
+ListTile(leading: ..., title: Text(통화명), trailing: Row(금액 + 핸들))
+
+// After: InkWell + Row + Expanded (유연한 공간 분배)
+InkWell(
+  child: Row(
+    children: [국기+코드뱃지, Expanded(통화명), ConstrainedBox(금액), 드래그핸들]
+  )
+)
+```
+
+#### 통화 포맷 변경 (currency_utils.dart)
+```dart
+// Before: 기호 매핑 + 위치 분기
+return '$symbol$result';  // "₫121,345"
+
+// After: 통화코드 통일
+return '$result $currencyCode';  // "121,345 VND"
+```
+
+---
+
 ## Version 1.0.6 (Build 7) - 2025-09-01
 
 ### 🎯 주요 업데이트

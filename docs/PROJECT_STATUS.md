@@ -2,8 +2,8 @@
 
 ## 프로젝트 개요
 **프로젝트명**: 환율 변환기 (Exchange Rate Converter)  
-**현재 버전**: 1.0.6 (Build 7)  
-**최종 업데이트**: 2025-09-01  
+**현재 버전**: 1.0.7 (Build 8)
+**최종 업데이트**: 2026-03-09  
 **상태**: 🟢 **Production (Google Play 출시 준비)**  
 **스토어 링크**: [Google Play Store](https://play.google.com/store/apps/details?id=com.accu.exchange_rate)
 
@@ -57,15 +57,19 @@
 - 포트폴리오 관리 기능
 - 여행 경비 계산기
 
-## 최근 작업 내역 (v1.0.6)
+## 최근 작업 내역 (v1.0.7)
 
 ### 완료된 작업
+- ✅ 통화명 레이아웃 깨짐 문제 해결 (ListTile → 커스텀 Row+Expanded)
+- ✅ 통화 금액 표시 형식 변경 (기호 → 통화코드: "₫121,345" → "121,345 VND")
+- ✅ 금액 영역 최대폭 제한으로 다양한 해상도 대응
+- ✅ 통화명 말줄임표(ellipsis) 처리 추가
+
+### 이전 버전 (v1.0.6) 작업
 - ✅ 안드로이드 네비게이션 바 오버랩 문제 해결
 - ✅ 모든 화면(11개)에 SafeArea 적용
 - ✅ 숫자 키패드 하단 버튼(0, ., ⌫) 터치 영역 보장
-- ✅ 온보딩 화면부터 적용되는 일관된 SafeArea 처리
 - ✅ 제스처 네비게이션 완벽 지원
-- ✅ 다양한 화면 비율 호환성 향상
 
 ### 이전 버전 (v1.0.5) 작업
 - ✅ Android 15 호환성 문제 해결
@@ -92,8 +96,8 @@ build/app/outputs/bundle/release/app-release.aab
 ```
 
 ### 버전 관리
-- 현재: v1.0.6+7
-- 이전: v1.0.5+6
+- 현재: v1.0.7+8
+- 이전: v1.0.6+7
 - pubspec.yaml에서 버전 관리
 
 ### 서명 정보
@@ -184,8 +188,39 @@ docs/
 - **2025-08-13**: v1.0.4 Google Play 첫 제출
 - **2025-08-14**: v1.0.5 업데이트 및 출시 완료 ✅
 - **2025-09-01**: v1.0.6 SafeArea 적용 및 UI 안정성 개선
+  - Pull Request #1 생성 완료
+  - AAB 파일 빌드 완료 (47.5MB)
+  - Google Play Store 업로드 준비 완료
+- **2026-03-09**: v1.0.7 메인 화면 레이아웃 개선 및 통화 표시 형식 변경
+  - ListTile → 커스텀 Row+Expanded 레이아웃 교체
+  - 통화 기호 → 통화코드 표시 변경
+
+## 최근 개발 활동
+
+### 2025-09-01 작업 완료 사항
+
+#### 1. SafeArea 문제 해결
+- **문제**: 안드로이드 네비게이션 바가 숫자 키패드 하단(0, ., ⌫) 가림
+- **해결**: 모든 화면(11개)에 SafeArea 위젯 적용
+- **영향**: 온보딩부터 메인 화면까지 전체 UI 안정성 향상
+
+#### 2. 버전 업데이트 및 문서화
+- 버전 업데이트: 1.0.5+6 → 1.0.6+7
+- CHANGELOG.md 업데이트
+- RELEASE_NOTES.md 작성
+- PROJECT_STATUS.md 갱신
+
+#### 3. 빌드 및 배포 준비
+- `flutter clean` 및 `flutter pub get` 실행
+- `flutter build appbundle --release` 성공
+- AAB 파일 생성: `build/app/outputs/bundle/release/app-release.aab`
+
+#### 4. GitHub 작업
+- 브랜치 생성: `fix/safearea-navigation-overlap`
+- 커밋 메시지: "fix: 안드로이드 네비게이션 바 오버랩 문제 해결"
+- Pull Request #1 생성: https://github.com/Augustkim-dev/flutter_exchange_rate/pull/1
 
 ---
 
-*Last Updated: 2025-09-01*  
-*Status: 🟢 Live on Google Play Store (v1.0.5) / 🔄 Update Ready (v1.0.6)*
+*Last Updated: 2026-03-09*
+*Status: 🟢 Live on Google Play Store (v1.0.5) / 🔄 Update Ready (v1.0.7)*

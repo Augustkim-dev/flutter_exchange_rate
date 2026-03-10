@@ -300,58 +300,6 @@ class CurrencyUtils {
       decimalDigits = 3;
     }
     
-    // 통화 기호 매핑
-    final currencySymbols = {
-      'USD': '\$',
-      'EUR': '€',
-      'JPY': '¥',
-      'GBP': '£',
-      'KRW': '₩',
-      'CNY': '¥',
-      'INR': '₹',
-      'RUB': '₽',
-      'BRL': 'R\$',
-      'MXN': '\$',
-      'CAD': 'C\$',
-      'AUD': 'A\$',
-      'NZD': 'NZ\$',
-      'HKD': 'HK\$',
-      'SGD': 'S\$',
-      'CHF': 'Fr',
-      'SEK': 'kr',
-      'NOK': 'kr',
-      'DKK': 'kr',
-      'PLN': 'zł',
-      'CZK': 'Kč',
-      'HUF': 'Ft',
-      'RON': 'lei',
-      'BGN': 'лв',
-      'HRK': 'kn',
-      'RSD': 'дин',
-      'UAH': '₴',
-      'ILS': '₪',
-      'EGP': 'E£',
-      'ZAR': 'R',
-      'NGN': '₦',
-      'KES': 'KSh',
-      'GHS': 'GH₵',
-      'MAD': 'د.م.',
-      'TND': 'د.ت',
-      'AED': 'د.إ',
-      'SAR': 'ر.س',
-      'THB': '฿',
-      'VND': '₫',
-      'PHP': '₱',
-      'MYR': 'RM',
-      'IDR': 'Rp',
-      'TRY': '₺',
-      'TWD': 'NT\$',
-      'MMK': 'K',
-      'KHR': '៛',
-      'LAK': '₭',
-      'BND': 'B\$',
-    };
-    
     // 숫자 포맷팅
     String formatted = amount.toStringAsFixed(decimalDigits);
     
@@ -372,14 +320,7 @@ class CurrencyUtils {
       result += '.$decimalPart';
     }
     
-    // 통화 기호 추가
-    String symbol = currencySymbols[currencyCode] ?? currencyCode + ' ';
-    
-    // 일부 통화는 기호를 뒤에 표시
-    if (['SEK', 'NOK', 'DKK', 'CZK', 'PLN', 'HUF', 'RON', 'BGN', 'HRK', 'RSD'].contains(currencyCode)) {
-      return '$result $symbol';
-    }
-    
-    return '$symbol$result';
+    // 통화 코드를 뒤에 표시
+    return '$result $currencyCode';
   }
 }

@@ -338,6 +338,14 @@ class ExchangeRateProvider with ChangeNotifier {
     }
   }
 
+  /// 선택된 통화 기준으로 입력값 설정 (계산기 결과 반영용)
+  void setInputForSelectedCurrency(String value) {
+    if (_selectedCurrency == null) return;
+    _currentInput = value;
+    _updateAmount();
+    notifyListeners();
+  }
+
   void _updateAmount() {
     if (_currentInput.isEmpty) {
       _amount = 0.0;

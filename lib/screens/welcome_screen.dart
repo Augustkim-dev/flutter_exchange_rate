@@ -34,6 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       // 1. 위치 서비스가 활성화되어 있는지 확인
       bool serviceEnabled = await PermissionService.isLocationServiceEnabled();
       if (!serviceEnabled) {
+        if (!mounted) return;
         bool shouldOpenSettings = await PermissionService.showLocationServiceDialog(context);
         if (shouldOpenSettings) {
           // 사용자가 설정으로 이동을 선택한 경우, 잠시 대기 후 다시 확인
@@ -42,6 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
 
         if (!serviceEnabled) {
+          if (!mounted) return;
           setState(() {
             _isDetecting = false;
           });
@@ -54,10 +56,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       if (permission == LocationPermission.denied) {
         // 권한 요청 다이얼로그 표시
+        if (!mounted) return;
         bool shouldRequest = await PermissionService.showPermissionRequestDialog(context);
         if (shouldRequest) {
           permission = await PermissionService.requestLocationPermission();
         } else {
+          if (!mounted) return;
           setState(() {
             _isDetecting = false;
           });
@@ -67,7 +71,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       if (permission == LocationPermission.denied) {
         // 권한이 거부된 경우
+        if (!mounted) return;
         await PermissionService.showPermissionDeniedDialog(context);
+        if (!mounted) return;
         setState(() {
           _isDetecting = false;
         });
@@ -76,7 +82,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       if (permission == LocationPermission.deniedForever) {
         // 권한이 영구적으로 거부된 경우
+        if (!mounted) return;
         await PermissionService.showPermissionPermanentlyDeniedDialog(context);
+        if (!mounted) return;
         setState(() {
           _isDetecting = false;
         });
@@ -85,6 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       // 3. 위치 기반 통화 감지
       final detectedCurrency = await LocationService.detectHomeCurrency();
+      if (!mounted) return;
       setState(() {
         _detectedCurrency = detectedCurrency;
         if (detectedCurrency != null) {
@@ -97,6 +106,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         _isDetecting = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isDetecting = false;
       });
