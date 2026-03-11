@@ -239,7 +239,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   _buildRow(['7', '8', '9', '×']),
                   _buildRow(['4', '5', '6', '-']),
                   _buildRow(['1', '2', '3', '+']),
-                  _buildRow(['00', '0', '.', '=']),
+                  _buildRow(['0', '.', '⌫', '=']),
                 ],
               ),
             ),
@@ -284,7 +284,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final isEquals = text == '=';
     final isClear = text == 'C';
     final isParenthesis = text == '(' || text == ')';
-    final isSpecial = isOperator || isEquals || isClear || isParenthesis;
+    final isBackspace = text == '⌫';
+    final isSpecial = isOperator || isEquals || isClear || isParenthesis || isBackspace;
 
     Color bgColor;
     Color fgColor;

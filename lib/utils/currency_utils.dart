@@ -287,18 +287,19 @@ class CurrencyUtils {
     return currency['country'] ?? 'US';
   }
 
-  static String formatCurrencyAmount(double amount, String currencyCode) {
-    // 통화별 소수점 자리수 설정
-    int decimalDigits = 2; // 기본값
-    
-    // 소수점이 없는 통화들
+  /// 통화별 소수점 자릿수 반환 (KRW/JPY/VND→0, USD/EUR→2, BHD/KWD→3)
+  static int getDecimalDigits(String currencyCode) {
     if (['JPY', 'KRW', 'VND', 'IDR', 'CLP', 'PYG', 'UGX', 'RWF', 'VUV', 'XPF', 'KMF', 'GNF', 'BIF', 'DJF', 'XAF', 'XOF'].contains(currencyCode)) {
-      decimalDigits = 0;
+      return 0;
     }
-    // 3자리 소수점을 사용하는 통화들
-    else if (['BHD', 'IQD', 'JOD', 'KWD', 'LYD', 'OMR', 'TND'].contains(currencyCode)) {
-      decimalDigits = 3;
+    if (['BHD', 'IQD', 'JOD', 'KWD', 'LYD', 'OMR', 'TND'].contains(currencyCode)) {
+      return 3;
     }
+    return 2;
+  }
+
+  static String formatCurrencyAmount(double amount, String currencyCode) {
+    int decimalDigits = getDecimalDigits(currencyCode);
     
     // 숫자 포맷팅
     String formatted = amount.toStringAsFixed(decimalDigits);
